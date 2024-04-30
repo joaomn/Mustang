@@ -32,7 +32,7 @@ public class DisplayEntity {
 	private String name;
 	
 	@ManyToOne
-	private UserEntity user_id;
+	private UserEntity user;
 	
 	
 	public DisplayDTO toDto() {
@@ -42,7 +42,7 @@ public class DisplayEntity {
 	public DisplayEntity (DisplayDTO entity) {
 	    this.id = entity.getId();
 	    this.name = entity.getName();
-	    this.user_id = entity.getUser_id();
+	    this.user = entity.getUser();
 	}
 
 }

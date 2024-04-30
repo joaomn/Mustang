@@ -28,7 +28,7 @@ public class DisplayDTO {
 	private String name;
 	
 	@ManyToOne
-	private UserEntity user_id;
+	private UserEntity user;
 	
 	
 	public DisplayEntity toDto() {
@@ -38,6 +38,6 @@ public class DisplayDTO {
 	public DisplayDTO (DisplayEntity entity) {
 	    this.id = entity.getId();
 	    this.name = entity.getName();
-	    this.user_id = entity.getUser_id();
+	    this.user = entity.getUser();
 	}
 }

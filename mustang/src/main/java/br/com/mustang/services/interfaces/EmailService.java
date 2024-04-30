@@ -1,4 +1,4 @@
-package br.com.mustang.services;
+package br.com.mustang.services.interfaces;
 
 public interface EmailService {
 	
