@@ -15,5 +15,7 @@ public interface UserService {
 	void delete (Long id) throws GenericMustangException;
 	
 	Optional<UserEntity> getByEmail(String email) throws GenericMustangException;
+	
+	void updatePassword(Long id, String password) throws GenericMustangException;
 
 }

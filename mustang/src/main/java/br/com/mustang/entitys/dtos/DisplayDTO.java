@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,12 @@ public class DisplayDTO {
 	@NotBlank(message = "The field 'name' is mandatory.")
 	private String name;
 	
+	@Column(nullable = false)
+	@Size(max = 16)
+	private String token;
+	
+	private String message;
+	
 	@ManyToOne
 	private UserEntity user;
 	
@@ -39,5 +46,6 @@ public class DisplayDTO {
 	    this.id = entity.getId();
 	    this.name = entity.getName();
 	    this.user = entity.getUser();
+	    this.token = entity.getToken();
 	}
 }

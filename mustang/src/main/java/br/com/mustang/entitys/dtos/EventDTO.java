@@ -36,6 +36,8 @@ public class EventDTO {
 	private Double sound;
 	
 	private Double temperature;
+	
+	private String message;
 
     @ManyToOne
     @JoinColumn(name = "display_id") 

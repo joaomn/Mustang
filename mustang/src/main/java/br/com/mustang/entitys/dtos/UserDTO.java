@@ -34,6 +34,9 @@ public class UserDTO {
 	@NotBlank(message = "The field 'email' is mandatory.")
 	@Column(unique = true)
 	private String email;
+	
+	private String message;
+	
 	@OneToMany(mappedBy = "user") 
 	private List<DisplayEntity> displays;
 	
