@@ -14,7 +14,7 @@ public interface DisplayService {
 	Optional<DisplayEntity> getbyId (Long id);
 	void update(Long id, DisplayEntity display) throws GenericMustangException;
 	void delete (Long id) throws GenericMustangException;
-	Optional<List<DisplayEntity>> getByUser(UserEntity user);
+	List<DisplayEntity> getByUser(Long id);
 	
 	
 

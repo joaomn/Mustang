@@ -27,11 +27,11 @@ public class DisplayServiceImpl implements DisplayService {
 
 		try {
 			display.setToken(UtilsService.generateRandomToken());
-			if (display.getName().isEmpty()) {
+			if (display.getName().isEmpty() || display.getName() == null) {
 				display.setName(UtilsService.generateRandomName());
 			}
 			displayRepository.save(display);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			throw new GenericMustangException("Erro ao persisitr display");
 		}
 	}
@@ -40,8 +40,8 @@ public class DisplayServiceImpl implements DisplayService {
 	public List<DisplayEntity> getAll() {
 		try {
 			return displayRepository.findAll();
-		} catch (Exception e) {
-			throw new GenericMustangException("Erro ao obter os dispalys do banco de dados");
+		} catch (RuntimeException e) {
+			return null;
 		}
 	}
 
@@ -50,7 +50,7 @@ public class DisplayServiceImpl implements DisplayService {
 		Optional<DisplayEntity> display = displayRepository.findById(id);
 
 		if (display.isEmpty()) {
-			throw new GenericMustangException("Display nao encontrado na base de dados");
+			return null;
 		}
 
 		return display;
@@ -73,7 +73,7 @@ public class DisplayServiceImpl implements DisplayService {
 				this.displayRepository.save(displayObjUPT);
 			}
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			throw new GenericMustangException("erro ao atualizar o display no banco de dados");
 		}
 
@@ -85,23 +85,24 @@ public class DisplayServiceImpl implements DisplayService {
 		Optional<DisplayEntity> display = displayRepository.findById(id);
 
 		if (display.isEmpty()) {
-			throw new GenericMustangException("Display nao encontrado na base de dados");
+			display = null;
 		}
 
 		displayRepository.deleteById(id);
 	}
 
 	@Override
-	public Optional<List<DisplayEntity>> getByUser(UserEntity user) {
+	public List<DisplayEntity> getByUser(Long id) {
 		try {
-			Optional<List<DisplayEntity>> findByUser_id = displayRepository.findByUser_id(user);
+			List<DisplayEntity> findByUser_id = displayRepository.findByUser_Id(id);
 
-			if (findByUser_id.isEmpty()) {
+		
+			if(findByUser_id.isEmpty()) {
 				return null;
 			}
 
 			return findByUser_id;
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 
 			throw new GenericMustangException("erro ao obter os displays pelo user id");
 		}

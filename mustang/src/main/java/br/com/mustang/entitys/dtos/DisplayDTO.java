@@ -25,7 +25,6 @@ public class DisplayDTO {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NotBlank(message = "The field 'name' is mandatory.")
 	private String name;
 	
 	@Column(nullable = false)
@@ -33,6 +32,9 @@ public class DisplayDTO {
 	private String token;
 	
 	private String message;
+	
+	@NotBlank(message = "The field 'description' is mandatory.")
+	private String description;
 	
 	@ManyToOne
 	private UserEntity user;
@@ -47,5 +49,6 @@ public class DisplayDTO {
 	    this.name = entity.getName();
 	    this.user = entity.getUser();
 	    this.token = entity.getToken();
+	    this.description = entity.getDescription();
 	}
 }

@@ -29,12 +29,15 @@ public class DisplayEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NotBlank(message = "The field 'name' is mandatory.")
+	
 	private String name;
 	
 	@Column(nullable = false)
 	@Size(max = 16)
 	private String token;
+	
+	@NotBlank(message = "The field 'description' is mandatory.")
+	private String description;
 	
 	@ManyToOne
 	private UserEntity user;
@@ -49,6 +52,7 @@ public class DisplayEntity {
 	    this.name = entity.getName();
 	    this.user = entity.getUser();
 	    this.token = entity.getToken();
+	    this.description = entity.getDescription();
 	}
 
 }

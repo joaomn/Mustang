@@ -12,7 +12,7 @@ import br.com.mustang.entitys.UserEntity;
 @Repository
 public interface DisplayRepository extends JpaRepository<DisplayEntity, Long> {
 	
-	Optional<List<DisplayEntity>> findByUser_id(UserEntity user_id);
+	 List<DisplayEntity> findByUser_Id(Long userId);
 	Optional<DisplayEntity> findByToken(String token);
 
 }
