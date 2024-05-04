@@ -3,6 +3,8 @@ package br.com.mustang.entitys.dtos;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.mustang.entitys.DisplayEntity;
 import br.com.mustang.entitys.UserEntity;
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,10 +36,12 @@ public class UserDTO {
 	private String password;
 	@NotBlank(message = "The field 'email' is mandatory.")
 	@Column(unique = true)
+	@Email(message = "The email field requires '@' and '.com")
 	private String email;
 	
 	private String message;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user") 
 	private List<DisplayEntity> displays;
 	

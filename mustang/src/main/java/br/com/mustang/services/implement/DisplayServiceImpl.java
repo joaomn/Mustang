@@ -3,7 +3,7 @@ package br.com.mustang.services.implement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +16,18 @@ import br.com.mustang.services.interfaces.DisplayService;
 
 @Service
 public class DisplayServiceImpl implements DisplayService {
-	
+
 	@Autowired
 	private DisplayRepository displayRepository;
-	
+
 	UtilsService utilsMustang = new UtilsService();
 
 	@Override
 	public void store(DisplayEntity display) throws GenericMustangException {
-		
+
 		try {
 			display.setToken(UtilsService.generateRandomToken());
-			if(display.getName().isEmpty()) {
+			if (display.getName().isEmpty()) {
 				display.setName(UtilsService.generateRandomName());
 			}
 			displayRepository.save(display);
@@ -48,32 +48,35 @@ public class DisplayServiceImpl implements DisplayService {
 	@Override
 	public Optional<DisplayEntity> getbyId(Long id) {
 		Optional<DisplayEntity> display = displayRepository.findById(id);
-		
-		if(display.isEmpty()) {
+
+		if (display.isEmpty()) {
 			throw new GenericMustangException("Display nao encontrado na base de dados");
 		}
-		
+
 		return display;
 	}
 
 	@Override
 	public void update(Long id, DisplayEntity display) throws GenericMustangException {
-		
+
 		try {
 			Optional<DisplayEntity> displayToUpdate = displayRepository.findById(id);
-			
-			if(displayToUpdate.isPresent()) {
+
+			if (displayToUpdate.isPresent()) {
 				DisplayEntity displayObjUPT = displayToUpdate.get();
-				 
-				 BeanUtils.copyProperties(display, displayObjUPT, "id", "token");
-				 
-				 this.displayRepository.save(displayObjUPT);
+
+				ModelMapper modelMapper = new ModelMapper();
+				modelMapper.getConfiguration().setSkipNullEnabled(true);
+
+				modelMapper.map(display, displayObjUPT);
+
+				this.displayRepository.save(displayObjUPT);
 			}
-			
+
 		} catch (Exception e) {
-			throw new GenericMustangException("erro ao display usuario no banco de dados");
+			throw new GenericMustangException("erro ao atualizar o display no banco de dados");
 		}
-		
+
 	}
 
 	@Override
@@ -92,14 +95,14 @@ public class DisplayServiceImpl implements DisplayService {
 	public Optional<List<DisplayEntity>> getByUser(UserEntity user) {
 		try {
 			Optional<List<DisplayEntity>> findByUser_id = displayRepository.findByUser_id(user);
-			
-			if(findByUser_id.isEmpty()) {
+
+			if (findByUser_id.isEmpty()) {
 				return null;
 			}
-			
+
 			return findByUser_id;
 		} catch (Exception e) {
-			
+
 			throw new GenericMustangException("erro ao obter os displays pelo user id");
 		}
 	}
