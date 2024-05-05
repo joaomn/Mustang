@@ -1,11 +1,11 @@
 package br.com.mustang.services.implement;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +29,12 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public void store(EventEntity event) throws GenericMustangException {
 		try {
+			event.setDate(LocalDateTime.now());
 			if(this.autorizationByDisplayToken(event.getDisplay().getToken()).isEmpty()) {
 				throw new TokenException("Token invalido ou nao encontrado");
 			}
 			eventRepository.save(event);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			throw new GenericMustangException("Falha ao persisitr evento");
 		}
 		
@@ -43,8 +44,8 @@ public class EventServiceImpl implements EventService {
 	public List<EventEntity> getAll() {
 		try {
 			return eventRepository.findAll();
-		} catch (Exception e) {
-			throw new GenericMustangException("Erro ao obter os eventos do banco de dados");
+		} catch (RuntimeException e) {
+			return null;
 		}
 	}
 
@@ -53,7 +54,7 @@ public class EventServiceImpl implements EventService {
 		Optional<EventEntity> event = eventRepository.findById(id);
 
 		if (event.isEmpty()) {
-			throw new GenericMustangException("Evento nao encontrado na base de dados");
+			return null;
 		}
 
 		return event;
@@ -75,7 +76,7 @@ public class EventServiceImpl implements EventService {
 				 this.eventRepository.save(eventObjUPT);
 			}
 			
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			throw new GenericMustangException("erro ao atualizar evento no banco de dados");
 		}
 		
@@ -86,7 +87,7 @@ public class EventServiceImpl implements EventService {
 		Optional<EventEntity> event = eventRepository.findById(id);
 
 		if (event.isEmpty()) {
-			throw new GenericMustangException("Evento nao encontrado na base de dados");
+			event = null;
 		}
 
 		eventRepository.deleteById(id);
@@ -97,28 +98,28 @@ public class EventServiceImpl implements EventService {
 	public Optional<DisplayEntity> autorizationByDisplayToken(String token) {
 		Optional<DisplayEntity> tokenObj = displayReposotiry.findByToken(token);
 		if(token.isEmpty()) {
-			throw new TokenException("Token invalido ou nao eviste");
+			return null;
 		}
 		
 		return tokenObj;
 	}
 
 	@Override
-	public Optional<List<EventEntity>> getEventsByDate(LocalDate startDate, LocalDate endDate) {
+	public List<EventEntity> getEventsByDate(LocalDate startDate, LocalDate endDate, Long displayId) {
 		try {
 			
-			return eventRepository.findEventsOnDates(startDate, endDate);
-		} catch (Exception e) {
+			return eventRepository.findEventsOnDates(startDate, endDate, displayId);
+		} catch (RuntimeException e) {
 			throw new GenericMustangException("erro ao obter eventos pro datas");
 		}
 	}
 
 	@Override
-	public Optional<List<EventEntity>> getByDisplay(DisplayEntity display) {
-		Optional<List<EventEntity>> event = eventRepository.findByDisplay(display);
+	public List<EventEntity> getByDisplay(DisplayEntity display) {
+		List<EventEntity> event = eventRepository.findByDisplay(display);
 
 		if (event.isEmpty()) {
-			throw new GenericMustangException("Evento nao encontrado na base de dados");
+			event = null;
 		}
 
 		return event;

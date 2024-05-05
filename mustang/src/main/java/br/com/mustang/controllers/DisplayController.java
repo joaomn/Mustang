@@ -118,7 +118,7 @@ public class DisplayController {
 			
 	}
 	
-	@Operation(description = "Obter todos os displays")
+	@Operation(description = "Obter todos os displays de um user pelo id de user")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<List<DisplayDTO>> showDisplaysByUser(@PathVariable Long id){
 		try {

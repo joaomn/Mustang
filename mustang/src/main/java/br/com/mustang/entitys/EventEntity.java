@@ -1,7 +1,10 @@
 package br.com.mustang.entitys;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.mustang.entitys.dtos.EventDTO;
 import jakarta.persistence.Column;
@@ -32,8 +35,8 @@ public class EventEntity {
 	private Long id;
 	
 	
-	@NotNull(message = "The field 'date' is mandatory.")
-	private LocalDate date;
+	@JsonIgnore
+	private LocalDateTime date;
 	
 	private Double luminosity;
 	

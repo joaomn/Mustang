@@ -18,9 +18,9 @@ public interface EventService {
 	
 	Optional<DisplayEntity> autorizationByDisplayToken (String token);
 	
-	Optional<List<EventEntity>> getEventsByDate (LocalDate startDate, LocalDate endDate);
+	List<EventEntity> getEventsByDate (LocalDate startDate, LocalDate endDate, Long displayId);
 	
-	Optional<List<EventEntity>> getByDisplay (DisplayEntity display);
+	List<EventEntity> getByDisplay (DisplayEntity display);
 	
 	
 	

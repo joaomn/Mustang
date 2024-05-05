@@ -1,6 +1,7 @@
 package br.com.mustang.entitys.dtos;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import br.com.mustang.entitys.DisplayEntity;
@@ -28,8 +29,7 @@ public class EventDTO {
 	private Long id;
 	
 	
-	@NotNull(message = "The field 'date' is mandatory.")
-	private LocalDate date;
+	private LocalDateTime date;
 	
 	private Double luminosity;
 	

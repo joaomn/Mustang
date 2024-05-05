@@ -16,8 +16,9 @@ import br.com.mustang.entitys.EventEntity;
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
 
 	Optional<List<EventEntity>> findByDate(LocalDate date);
-	Optional<List<EventEntity>> findByDisplay(DisplayEntity display);
+	List<EventEntity> findByDisplay(DisplayEntity display);
 	
-	 @Query("SELECT e FROM EventEntity e WHERE e.date >= :startDate AND e.date <= :endDate")
-	   Optional<List<EventEntity>> findEventsOnDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+	
+	 @Query("SELECT e FROM EventEntity e WHERE DATE(e.date) >= :startDate AND DATE(e.date) <= :endDate AND e.display.id = :displayID")
+	   List<EventEntity> findEventsOnDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("displayID") Long displayID);
 }
