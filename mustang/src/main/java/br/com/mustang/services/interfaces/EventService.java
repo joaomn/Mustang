@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import br.com.mustang.entitys.DisplayEntity;
 import br.com.mustang.entitys.EventEntity;
+import br.com.mustang.enums.StatusTypeEnum;
 import br.com.mustang.exceptions.GenericMustangException;
 
 public interface EventService {
@@ -21,6 +22,18 @@ public interface EventService {
 	List<EventEntity> getEventsByDate (LocalDate startDate, LocalDate endDate, Long displayId);
 	
 	List<EventEntity> getByDisplay (DisplayEntity display);
+	
+	StatusTypeEnum getLumonosityStatus(Double lumonsity);
+	
+	StatusTypeEnum getSoundStatus(Double sound);
+	
+	StatusTypeEnum getTemperatureStatus(Double temperature);
+	
+	List<EventEntity> getEventsByDateAndLuminosityStatus (LocalDate startDate, LocalDate endDate, Long displayId, String status);
+	
+	List<EventEntity> getEventsByDateAndSoundStatus (LocalDate startDate, LocalDate endDate, Long displayId, String status);
+	
+	List<EventEntity> getEventsByDateAndTemperatureStatus (LocalDate startDate, LocalDate endDate, Long displayId, String status);
 	
 	
 	

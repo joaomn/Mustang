@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,18 @@ public class EventEntity {
 	private Double sound;
 	
 	private Double temperature;
+	
+	@JsonIgnore
+	@Size(max = 20)
+	private String temperatureStatus;
+	
+	@JsonIgnore
+	@Size(max = 20)
+	private String soundStatus;
+	
+	@JsonIgnore
+	@Size(max = 20)
+	private String luminosityStatus;
 
     @ManyToOne
     @JoinColumn(name = "display_id") 
@@ -59,6 +72,9 @@ public class EventEntity {
 	   this.luminosity = dto.getLuminosity();
 	   this.sound = dto.getSound();
 	   this.temperature = dto.getTemperature();
+	   this.luminosityStatus = dto.getLuminosityStatus();
+	   this.soundStatus = dto.getSoundStatus();
+	   this.temperatureStatus = dto.getTemperatureStatus();
    }
 	
 	

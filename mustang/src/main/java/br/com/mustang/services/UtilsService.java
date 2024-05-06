@@ -19,13 +19,12 @@ public class UtilsService {
 	
 	
 	 public static String generateRandomName() {
-	        String[] nomes = {"João", "Maria", "José", "Ana", "Pedro", "Luiza", "Carlos", "Mariana", "Paulo", "Fernanda"};
+	        String[] nomes = {"Albert", "Marie", "Isaac", "Rosalind", "Galileo", "Ada", "Charles", "Jane", "Stephen", "Rita"};
 	        Random random = new Random();
 	        int index = random.nextInt(nomes.length);
 	        String nome = nomes[index];
 	        
-	        String[] sobrenomes = {"Silva", "Santos", "Oliveira"
-	        		, "Pereira", "Almeida", "Ribeiro", "Rodrigues", "Costa", "Carvalho", "Martins"};
+	        String[] sobrenomes = {"Einstein", "Curie", "Newton", "Franklin", "Galilei", "Lovelace", "Darwin", "Goodall", "Hawking", "Levi-Montalcini"};
 	        int indexS = random.nextInt(sobrenomes.length);
 	        String sobrenome = sobrenomes[indexS];
 	        

@@ -193,5 +193,84 @@ public class EventController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(errorDTO));
 	    }
 	}
+	
+	
+	@Operation(description = "Obter eventos por intervalo de datas, ID do display e status de temperatura")
+	@GetMapping("/events/temperature-status")
+	public ResponseEntity<List<EventDTO>> getEventsByDateAndDisplayIdAndTemperatureStatus(
+	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+	        @RequestParam("displayId") Long displayId,
+	        @RequestParam("temperatureStatus") String temperatureStatus) {
+	    try {
+	        List<EventEntity> events = eventService.getEventsByDateAndTemperatureStatus(startDate, endDate, displayId, temperatureStatus);
+	        if (events.isEmpty()) {
+	            EventDTO errorDTO = new EventDTO();
+	            errorDTO.setMessage("Não há registros para os parâmetros solicitados");
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.singletonList(errorDTO));
+	        }
+
+	        List<EventDTO> eventDTOs = events.stream()
+	                .map(event -> event.toDto())
+	                .collect(Collectors.toList());
+	        return ResponseEntity.status(HttpStatus.OK).body(eventDTOs);
+	    } catch (RuntimeException e) {
+	        EventDTO errorDTO = new EventDTO();
+	        errorDTO.setMessage(e.getMessage());
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(errorDTO));
+	    }
+	}
+
+	@Operation(description = "Obter eventos por intervalo de datas, ID do display e status de som")
+	@GetMapping("/events/sound-status")
+	public ResponseEntity<List<EventDTO>> getEventsByDateAndDisplayIdAndSoundStatus(
+	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+	        @RequestParam("displayId") Long displayId,
+	        @RequestParam("soundStatus") String soundStatus) {
+	    try {
+	        List<EventEntity> events = eventService.getEventsByDateAndSoundStatus(startDate, endDate, displayId, soundStatus);
+	        if (events.isEmpty()) {
+	            EventDTO errorDTO = new EventDTO();
+	            errorDTO.setMessage("Não há registros para os parâmetros solicitados");
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.singletonList(errorDTO));
+	        }
+
+	        List<EventDTO> eventDTOs = events.stream()
+	                .map(event -> event.toDto())
+	                .collect(Collectors.toList());
+	        return ResponseEntity.status(HttpStatus.OK).body(eventDTOs);
+	    } catch (RuntimeException e) {
+	        EventDTO errorDTO = new EventDTO();
+	        errorDTO.setMessage(e.getMessage());
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(errorDTO));
+	    }
+	}
+
+	@Operation(description = "Obter eventos por intervalo de datas, ID do display e status de luminosidade")
+	@GetMapping("/events/luminosity-status")
+	public ResponseEntity<List<EventDTO>> getEventsByDateAndDisplayIdAndLuminosityStatus(
+	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+	        @RequestParam("displayId") Long displayId,
+	        @RequestParam("luminosityStatus") String luminosityStatus) {
+	    try {
+	        List<EventEntity> events = eventService.getEventsByDateAndLuminosityStatus(startDate, endDate, displayId, luminosityStatus);
+	        if (events.isEmpty()) {
+	            EventDTO errorDTO = new EventDTO();
+	            errorDTO.setMessage("Não há registros para os parâmetros solicitados");
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.singletonList(errorDTO));
+	        }
+
+	        List<EventDTO> eventDTOs = events.stream()
+	                .map(event -> event.toDto())
+	                .collect(Collectors.toList());
+	        return ResponseEntity.status(HttpStatus.OK).body(eventDTOs);
+	    } catch (RuntimeException e) {
+	        EventDTO errorDTO = new EventDTO();
+	        errorDTO.setMessage(e.getMessage());
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(errorDTO));
+	    }
+	}
 
 }

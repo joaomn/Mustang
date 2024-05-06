@@ -21,4 +21,13 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
 	
 	 @Query("SELECT e FROM EventEntity e WHERE DATE(e.date) >= :startDate AND DATE(e.date) <= :endDate AND e.display.id = :displayID")
 	   List<EventEntity> findEventsOnDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("displayID") Long displayID);
+	 
+	 @Query("SELECT e FROM EventEntity e WHERE DATE(e.date) >= :startDate AND DATE(e.date) <= :endDate AND e.display.id = :displayID AND e.temperatureStatus = :temperatureStatus")
+	 List<EventEntity> findEventsOnDatesWithTemperatureStatus(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("displayID") Long displayID, @Param("temperatureStatus") String temperatureStatus);
+
+	 @Query("SELECT e FROM EventEntity e WHERE DATE(e.date) >= :startDate AND DATE(e.date) <= :endDate AND e.display.id = :displayID AND e.soundStatus = :soundStatus")
+	 List<EventEntity> findEventsOnDatesWithSoundStatus(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("displayID") Long displayID, @Param("soundStatus") String soundStatus);
+
+	 @Query("SELECT e FROM EventEntity e WHERE DATE(e.date) >= :startDate AND DATE(e.date) <= :endDate AND e.display.id = :displayID AND e.luminosityStatus = :luminosityStatus")
+	 List<EventEntity> findEventsOnDatesWithLuminosityStatus(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("displayID") Long displayID, @Param("luminosityStatus") String luminosityStatus);
 }
