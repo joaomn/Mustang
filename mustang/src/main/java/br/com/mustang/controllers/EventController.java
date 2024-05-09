@@ -1,5 +1,6 @@
 package br.com.mustang.controllers;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.mustang.entitys.DisplayEntity;
 import br.com.mustang.entitys.EventEntity;
 import br.com.mustang.entitys.dtos.EventDTO;
+import br.com.mustang.services.CsvUtilsService;
 import br.com.mustang.services.implement.DisplayServiceImpl;
+import br.com.mustang.services.implement.EmailServiceImpl;
 import br.com.mustang.services.implement.EventServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -42,6 +46,12 @@ public class EventController {
 	
 	@Autowired
 	private DisplayServiceImpl displayService;
+	
+	@Autowired
+	private EmailServiceImpl emailService;
+	
+	@Autowired
+	private CsvUtilsService csvUtils;
 	
 	private static final long MINIMUM_REQUEST_INTERVAL = 20000; // 20 segundos
 	private static final Map<String, Long> lastRequestTimes = new HashMap<>();
@@ -272,5 +282,45 @@ public class EventController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(errorDTO));
 	    }
 	}
+	
+	@Operation(description = "Obter CSV de eventos por intervalo de datas e ID do display")
+	@GetMapping("/events/csv-generate")
+	public ResponseEntity<String> getCSVEventsByDateAndDisplayId(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	                                                                  @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+	                                                                  @RequestParam("displayId") Long displayId) {
+	    try {
+	    	Optional<DisplayEntity> getbyId = displayService.getbyId(displayId);
+	    	
+	    	
+	        List<EventEntity> events = eventService.getEventsByDate(startDate, endDate, displayId);
+	        if(events.isEmpty()|| getbyId.isEmpty()) {
+		        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("nao há registros para os parametros solicitados");
+	        }
+	        
+	        DisplayEntity display = getbyId.get();
+	        
+	        List<EventDTO> eventDTOs = events.stream()
+	                                         .map(event -> event.toDto())
+	                                         .collect(Collectors.toList());
+	        String generateCsv = csvUtils.generateCsv(eventDTOs);
+	        
+	        byte[] attachment = generateCsv.getBytes(StandardCharsets.UTF_8);
+	        
+	       String nameFile = display.getName() + "-" + LocalDate.now() ;
+	        
+	        
+	        
+	        try {
+				emailService.sendEmailWhitAttachmentCSV(display.getUser().getEmail(), attachment,nameFile ,
+						"Csv gerado para " + nameFile);
+			} catch (MessagingException e) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("erro ao enviar email.");
+			}
+	        return ResponseEntity.status(HttpStatus.OK).body("Tudo certo, Enviado para o email do usuario");
+	    } catch (RuntimeException e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("erro interno do servidor");
+	    }
+	}
+	
 
 }

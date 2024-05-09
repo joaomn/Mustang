@@ -40,7 +40,7 @@ public class UserController {
 			userService.store(user);
 			return ResponseEntity.status(HttpStatus.CREATED).body(user.toDto());
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			UserDTO errorDTO = new UserDTO();
 	        errorDTO.setMessage(e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
@@ -60,7 +60,7 @@ public class UserController {
 			list = all.stream().map(user -> user.toDto()).collect(Collectors.toList());
 			return ResponseEntity.status(HttpStatus.OK).body(list);
 
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
@@ -113,7 +113,7 @@ public class UserController {
 			userService.update(id, user);
 			return ResponseEntity.status(HttpStatus.OK).body("Usuario atualizado com sucesso");
 			
-		} catch (GenericMustangException e) {
+		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
 		}
 	}
