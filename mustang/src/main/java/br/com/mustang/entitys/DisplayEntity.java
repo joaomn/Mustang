@@ -32,7 +32,7 @@ public class DisplayEntity {
 	
 	private String name;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@Size(max = 16)
 	private String token;
 	

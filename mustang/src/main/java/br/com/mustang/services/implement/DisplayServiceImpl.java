@@ -27,7 +27,7 @@ public class DisplayServiceImpl implements DisplayService {
 
 		try {
 			display.setToken(UtilsService.generateRandomToken());
-			if (display.getName().isEmpty() || display.getName() == null) {
+			if (display.getName() == null) {
 				display.setName(UtilsService.generateRandomName());
 			}
 			displayRepository.save(display);
@@ -106,6 +106,17 @@ public class DisplayServiceImpl implements DisplayService {
 
 			throw new GenericMustangException("erro ao obter os displays pelo user id");
 		}
+	}
+
+	@Override
+	public Optional<DisplayEntity> getbyToken(String token) {
+		Optional<DisplayEntity> display = displayRepository.findByToken(token);
+
+		if (display.isEmpty()) {
+			return null;
+		}
+
+		return display;
 	}
 
 }

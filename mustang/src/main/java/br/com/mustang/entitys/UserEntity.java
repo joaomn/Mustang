@@ -30,7 +30,6 @@ public class UserEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonIgnore
 	private Long id;
 	@NotBlank(message = "The field 'name' is mandatory.")
 	private String name;

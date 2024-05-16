@@ -5,7 +5,7 @@ import java.util.Random;
 public class UtilsService {
 	
 	public static String generateRandomToken() {
-        String characters = "abcdefghijklmnopqrstuvwxyz";
+        String characters = "abcdefghijklmnopqrstuvwxyz1234567890";
         StringBuilder token = new StringBuilder();
         Random random = new Random();
         

@@ -68,6 +68,14 @@ public class EventController {
 		        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorDTO);
 		    }
 		try {
+			Optional<DisplayEntity> getbyToken = displayService.getbyToken(token);
+			if(getbyToken.isEmpty()) {
+				EventDTO errorDTO = new EventDTO();
+		        errorDTO.setMessage("Nao foi possivel encontrar este display");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+			}
+			DisplayEntity display = getbyToken.get();
+			event.setDisplay(display);
 			eventService.store(event);
 			 lastRequestTimes.put(token, currentTime);
 			 System.out.println(lastRequestTimes);
