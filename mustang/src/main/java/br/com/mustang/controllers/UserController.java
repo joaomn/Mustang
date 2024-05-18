@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.mustang.entitys.UserEntity;
+import br.com.mustang.entitys.dtos.LoginRequestDTO;
+import br.com.mustang.entitys.dtos.NewUserDTO;
+import br.com.mustang.entitys.dtos.ResponseDTO;
 import br.com.mustang.entitys.dtos.UserDTO;
 import br.com.mustang.exceptions.GenericMustangException;
+import br.com.mustang.infras.security.TokenService;
+import br.com.mustang.services.implement.EmailServiceImpl;
 import br.com.mustang.services.implement.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -33,12 +39,18 @@ public class UserController {
 	@Autowired
 	private UserServiceImpl userService;
 	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private EmailServiceImpl email;
+	
 	@Operation(description = "Salvar um usuario")
 	@PostMapping
-	public ResponseEntity<UserDTO> store(@Valid @RequestBody UserEntity user){
+	public ResponseEntity<?> store(@RequestBody @Valid UserEntity user){
 		try {
 			userService.store(user);
-			return ResponseEntity.status(HttpStatus.CREATED).body(user.toDto());
+			return ResponseEntity.status(HttpStatus.CREATED).body(new NewUserDTO(user.getName(), user.getEmail(), "Usuario Criado com sucesso"));
 
 		} catch (RuntimeException e) {
 			UserDTO errorDTO = new UserDTO();
@@ -133,4 +145,49 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.OK).body("Usuario deletado com sucesso");
 			
 	}
+	
+	 @Operation(description  = "rota de login")
+	 @PostMapping("/login")
+	    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body){
+	        UserEntity user = this.userService.getByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
+	        if(new BCryptPasswordEncoder().matches(body.password(), user.getPassword())) {
+	        	 String token = this.tokenService.generateToken(user);
+	        	 return ResponseEntity.ok(new ResponseDTO(token));
+	        }
+	        return ResponseEntity.badRequest().body("Credencias erradas revise e tente novamente");
+	    }
+	 
+	 @Operation(description  = "Gerar e definir uma nova senha para o usuário pelo email")
+	 @PostMapping("/{emaill}/password")
+	 public ResponseEntity<?> generateAndResetPassword(@PathVariable String emaill) {
+	     Optional<UserEntity> userObj = this.userService.getByEmail(emaill);
+
+	         
+
+	     if (userObj.isPresent()) {
+	    	 UserEntity user = userObj.get();
+	         String newPass = userService.generateNewRandonPassword(8); 
+	         user.setPassword(newPass);
+	         try {
+	        	 userService.store(user);
+			} catch (GenericMustangException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+	         
+
+	         try {
+	             email.sendSimpleEmail(user.getEmail(),"Sua nova senha é: " + newPass);
+	         } catch (Exception e) {
+	             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno para recuperar senha");
+	         }
+
+	         return ResponseEntity.status(HttpStatus.OK).body("Serenha redefinida com sucesso");
+	     }
+
+	    
+
+	     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email de usuario errado ou nao cadastrado");
+	 }
 }

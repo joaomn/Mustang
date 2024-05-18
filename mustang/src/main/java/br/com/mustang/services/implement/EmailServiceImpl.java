@@ -18,13 +18,13 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender emailSender;
 
 	@Override
-	public void sendSimpleEmail(String to) {
+	public void sendSimpleEmail(String to, String bodyText) {
 		try {
 			SimpleMailMessage email = new SimpleMailMessage();
 			
 			email.setTo(to);
 			email.setSubject("Email de teste da api");
-			email.setText("chegou ai? hahaha pegou carai!");
+			email.setText(bodyText);
 			email.setFrom("MUSTANG API EMAIL SERVICE <api.mustang.contato@gmail.com>");
 			
 			emailSender.send(email);

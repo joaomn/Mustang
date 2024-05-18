@@ -17,5 +17,7 @@ public interface UserService {
 	Optional<UserEntity> getByEmail(String email) throws GenericMustangException;
 	
 	void updatePassword(Long id, String password) throws GenericMustangException;
+	
+	String generateNewRandonPassword(int lenght);
 
 }

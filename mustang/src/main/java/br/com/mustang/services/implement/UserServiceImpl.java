@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
 import br.com.mustang.entitys.UserEntity;
 import br.com.mustang.exceptions.GenericMustangException;
@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void store(UserEntity user) throws GenericMustangException {
 		try {
+			String pass = new BCryptPasswordEncoder().encode(user.getPassword());
+			user.setPassword(pass);
 			userRepository.save(user);
 		} catch (Exception e) {
 			throw new GenericMustangException("Erro ao salvar usuario");
@@ -67,6 +69,11 @@ public class UserServiceImpl implements UserService {
 				modelMapper.getConfiguration().setSkipNullEnabled(true);
 
 				modelMapper.map(user, userobjUpdate);
+				
+				 if (user.getPassword() != null) {
+		                String encryptedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+		                userobjUpdate.setPassword(encryptedPassword);
+		            }
 
 				this.userRepository.save(userobjUpdate);
 
@@ -104,6 +111,19 @@ public class UserServiceImpl implements UserService {
 	public void updatePassword(Long id, String password) throws GenericMustangException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String generateNewRandonPassword(int lenght) {
+		String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#.*";
+	    StringBuilder senha = new StringBuilder();
+
+	    for (int i = 0; i < lenght; i++) {
+	        int index = (int) (Math.random() * caracteres.length());
+	        senha.append(caracteres.charAt(index));
+	    }
+
+	    return senha.toString();
 	}
 
 }
