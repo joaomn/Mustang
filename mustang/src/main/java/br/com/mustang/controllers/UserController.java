@@ -81,7 +81,7 @@ public class UserController {
 	
 	@Operation(description = "Obter usuario por id")
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> showUserByID(@PathVariable Long id){
+	public ResponseEntity<?> showUserByID(@PathVariable Long id){
 		
 			Optional<UserEntity> userObj = userService.getbyId(id);
 		
@@ -90,14 +90,14 @@ public class UserController {
 	        errorDTO.setMessage("Usuario nao encontrado");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(userObj.get().toDto());
+		return ResponseEntity.status(HttpStatus.OK).body(new NewUserDTO(userObj.get().getName(), userObj.get().getEmail(), userObj.get().getId().toString()));
 		
 		
 	}
 	
 	@Operation(description = "Obter usuario por email")
 	@GetMapping("/email/{email}")
-	public ResponseEntity<UserDTO> showUserByEmail(@PathVariable String email){
+	public ResponseEntity<?> showUserByEmail(@PathVariable String email){
 			Optional<UserEntity> userObj = userService.getByEmail(email);
 		
 		if(userObj == null) {
@@ -105,7 +105,7 @@ public class UserController {
 	        errorDTO.setMessage("Usuario nao encontrado");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(userObj.get().toDto());
+		return ResponseEntity.status(HttpStatus.OK).body(new NewUserDTO(userObj.get().getName(), userObj.get().getEmail(), userObj.get().getId().toString()));
 		
 		
 		
