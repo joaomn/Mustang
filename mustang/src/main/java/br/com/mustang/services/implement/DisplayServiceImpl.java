@@ -30,6 +30,9 @@ public class DisplayServiceImpl implements DisplayService {
 			if (display.getName() == null) {
 				display.setName(UtilsService.generateRandomName());
 			}
+			if(display.getActive() == null) {
+				display.setActive(true);
+			}
 			displayRepository.save(display);
 		} catch (RuntimeException e) {
 			throw new GenericMustangException("Erro ao persisitr display");

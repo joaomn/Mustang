@@ -31,6 +31,8 @@ public class DisplayDTO {
 	@Size(max = 16)
 	private String token;
 	
+	private Boolean active;
+	
 	private String message;
 	
 	@NotBlank(message = "The field 'description' is mandatory.")
@@ -50,5 +52,6 @@ public class DisplayDTO {
 	    this.user = entity.getUser();
 	    this.token = entity.getToken();
 	    this.description = entity.getDescription();
+	    this.active = entity.getActive();
 	}
 }

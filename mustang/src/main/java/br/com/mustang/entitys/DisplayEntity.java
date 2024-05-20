@@ -36,6 +36,8 @@ public class DisplayEntity {
 	@Size(max = 16)
 	private String token;
 	
+	private Boolean active;
+	
 	@NotBlank(message = "The field 'description' is mandatory.")
 	private String description;
 	
@@ -53,6 +55,7 @@ public class DisplayEntity {
 	    this.user = entity.getUser();
 	    this.token = entity.getToken();
 	    this.description = entity.getDescription();
+	    this.active = entity.getActive();
 	}
 
 }

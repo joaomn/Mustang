@@ -23,6 +23,7 @@ import br.com.mustang.entitys.UserEntity;
 import br.com.mustang.entitys.dtos.LoginRequestDTO;
 import br.com.mustang.entitys.dtos.NewUserDTO;
 import br.com.mustang.entitys.dtos.ResponseDTO;
+import br.com.mustang.entitys.dtos.ResponseLightUserDTO;
 import br.com.mustang.entitys.dtos.UserDTO;
 import br.com.mustang.exceptions.GenericMustangException;
 import br.com.mustang.infras.security.TokenService;
@@ -105,7 +106,7 @@ public class UserController {
 	        errorDTO.setMessage("Usuario nao encontrado");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(new NewUserDTO(userObj.get().getName(), userObj.get().getEmail(), userObj.get().getId().toString()));
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseLightUserDTO(userObj.get().getName(), userObj.get().getEmail(), userObj.get().getId()));
 		
 		
 		
