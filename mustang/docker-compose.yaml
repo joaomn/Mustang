@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=agenda'
+      - 'MYSQL_PASSWORD=BHU*nji9'
+      - 'MYSQL_ROOT_PASSWORD=BHU*nji9'
+      - 'MYSQL_USER=banco'
+    ports:
+      - '3306'
+    networks:
+      - mynetwork
+
+  spring-app:
+    build: .
+    depends_on:
+      - mysql
+    ports:
+      - '8080:8080'
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/agenda'
+      - 'SPRING_DATASOURCE_USERNAME=banco'
+      - 'SPRING_DATASOURCE_PASSWORD=BHU*nji9'
+    networks:
+      - mynetwork
+
+  front-app:
+    image: 'jhonyamn/nascar:1.0'
+    ports:
+      - '5173:5173'
+    environment:
+      - 'VITE_API_URL=http://127.0.0.1:8080'  # Use o nome do serviço e a porta para acessar o spring-app
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
