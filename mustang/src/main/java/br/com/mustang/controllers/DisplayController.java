@@ -138,5 +138,21 @@ public class DisplayController {
 		}
 		
 	}
+	
+	@Operation(description = "Obter display por token")
+	@GetMapping("/get-by-token/{token}")
+	public ResponseEntity<DisplayDTO> showUserByToken(@PathVariable String token){
+		
+			Optional<DisplayEntity> obj = displayService.getbyToken(token.toUpperCase());
+		
+		if(obj == null) {
+			DisplayDTO errorDTO = new DisplayDTO();
+	        errorDTO.setMessage("Usuario nao encontrado");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(obj.get().toDto());
+		
+		
+	}
 
 }

@@ -132,24 +132,24 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public StatusTypeEnum getLumonosityStatus(Double lumonsity) {
 
-		if (lumonsity <= 200) {
-			return StatusTypeEnum.BAD;
-		} else if (lumonsity <= 600) {
-			return StatusTypeEnum.SATISFACTORY;
-		} else if (lumonsity >= 601) {
-			return StatusTypeEnum.GOOD;
+		if (lumonsity < 2400) {
+		    return StatusTypeEnum.BAD;
+		} else if (lumonsity <= 2900) {
+		    return StatusTypeEnum.SATISFACTORY;
+		} else if (lumonsity > 2900) {
+		    return StatusTypeEnum.GOOD;
 		}
 		return StatusTypeEnum.NULL;
 	}
 
 	@Override
 	public StatusTypeEnum getSoundStatus(Double sound) {
-		if (sound <= 412) {
-			return StatusTypeEnum.GOOD;
-		} else if (sound <= 612) {
-			return StatusTypeEnum.SATISFACTORY;
-		} else if (sound > 612) {
-			return StatusTypeEnum.BAD;
+		if (sound < 60) {
+		    return StatusTypeEnum.GOOD;
+		} else if (sound <= 89) {
+		    return StatusTypeEnum.SATISFACTORY;
+		} else if (sound > 89) {
+		    return StatusTypeEnum.BAD;
 		}
 		return StatusTypeEnum.NULL;
 	}
