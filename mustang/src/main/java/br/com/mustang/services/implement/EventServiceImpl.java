@@ -2,6 +2,7 @@ package br.com.mustang.services.implement;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +30,12 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public void store(EventEntity event) throws GenericMustangException {
+		ZoneId zoneId = ZoneId.of("America/Recife");
 		try {
 			event.setLuminosityStatus(this.getLumonosityStatus(event.getLuminosity()).getValue());
 			event.setSoundStatus(this.getSoundStatus(event.getSound()).getValue());
 			event.setTemperatureStatus(this.getTemperatureStatus(event.getTemperature()).getValue());
-			event.setDate(LocalDateTime.now());
+			event.setDate(LocalDateTime.now(zoneId));
 			if (this.autorizationByDisplayToken(event.getDisplay().getToken()).isEmpty()) {
 				throw new TokenException("Token invalido ou nao encontrado");
 			}
